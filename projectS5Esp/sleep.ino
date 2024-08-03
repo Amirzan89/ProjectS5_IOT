@@ -1,0 +1,6 @@
+void makeDeepSleep(){
+    //
+}
+void wakeup(){
+    //
+}
