@@ -1,42 +1,28 @@
-bool isReady = false;
+bool isReadyCom = false;
 void initCom(){
-    Serial.print("init");
-}
-void getData(){
-    Serial.print('getData');
-    if(Serial.available){
-        return Serial.readStringUntil('\n');
+    Serial.println("init arduino");
+    unsigned long timeout = millis() + 5000; 
+    while(!isReadyCom){
+        if(millis() <= timeout){
+            while(Serial.available() > 0){
+                if(Serial.readStringUntil('\n') == "ready"){
+                    isReadyCom = true;
+                }
+            }
+        }else{
+            // reach timeout
+        }
     }
 }
-void reqData(){
-    Serial.print();
-}
-void resData(){
-    Serial.print("");
-}
-
-
-enum State { WAITING, RECEIVING, PROCESSING };
-
-State state = WAITING;
-
-void SerialCommunication::handleSerialEvent() {
-    switch (state) {
-        case WAITING:
-        if (Serial.available() > 0) {
-            state = RECEIVING;
-        }
-        break;
-        case RECEIVING:
-        char c = Serial.read();
-        // Process the received data
-        if (c == '\n') {
-            state = PROCESSING;
-        }
-        break;
-        case PROCESSING:
-        // Process the data
-        state = WAITING;
-        break;
-    }
-}
+//void getData(){
+//    Serial.print('getData');
+//    if(Serial.available){
+//        return Serial.readStringUntil('\n');
+//    }
+//}
+//void reqData(){
+//    Serial.print();
+//}
+//void resData(){
+//    Serial.print("");
+//}

@@ -1,11 +1,12 @@
 #include <WiFiManager.h>
-bool portalRunning = false;
+#include "../../config.h"
 WiFiManager wm;
+bool portalRunning = false;
 void initWifi(){
     WiFi.mode(WIFI_STA);
     pinMode(TRIGGER_PIN, INPUT_PULLUP);
 }
-void checkWifi(){
+bool checkWifi(){
     const int timeout = 120;
     if ( digitalRead(TRIGGER_PIN) == LOW) {
         WiFiManager wm;

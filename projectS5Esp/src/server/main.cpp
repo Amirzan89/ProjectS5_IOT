@@ -1,6 +1,5 @@
-#include "wifi.ino";
-#include "server.ino";
-#include "OTA.ino";
+#include "wifi.h"
+#include "Arduino.h"
 bool isConnect = false;
 int maxTryConnect = 3;
 int tryConnect = 0;
