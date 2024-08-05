@@ -7,8 +7,8 @@
 //config server
 #ifndef CONFIG_SERVER_H
 #define CONFIG_SERVER_H
-const char* CONFIG_baseURL = "http://localhost:8000/api";
-const char* CONFIG_path[] = {"/device/get", "/device/set", "/device/send"};
+extern const char* CONFIG_baseURL;
+extern const char* CONFIG_path[];
 #endif
 
 //config sensor
