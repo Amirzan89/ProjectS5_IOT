@@ -1,6 +1,0 @@
-void makeDeepSleep(){
-    //
-}
-void wakeup(){
-    //
-}
