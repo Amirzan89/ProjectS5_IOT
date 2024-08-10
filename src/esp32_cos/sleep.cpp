@@ -1,5 +1,6 @@
 #include "esp32_cos_header/sleep.h"
-void makeDeepSleep(){
+bool isSleep = false;
+void makeSleep(){
     //
 }
 void wakeup(){

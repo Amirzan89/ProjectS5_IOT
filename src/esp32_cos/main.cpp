@@ -3,12 +3,14 @@
 #include "common/utils_all.h"
 #include "esp32_cos_header/utils.h"
 #include "esp32_cos_header/server/main.h"
+#include "esp32_cos_header/server/OTA.h"
+#include "esp32_cos_header/server/server.h"
 #include "esp32_cos_header/communication.h"
 #include "esp32_cos_header/timer.h"
-// #include "lib.h"
+#include "esp32_cos_header/sleep.h"
 bool isConnected = false;
 bool isRunning = false;
-void setup() {
+void setup(){
     Serial.begin(115200);
     initUtilsAll();
     while(!isConnected){
@@ -16,13 +18,17 @@ void setup() {
         delay(500);
     }
     initCom();
+    initTimer();
 }
-void loop() { 
-    // lcd.println("welcommee");
-    // lcd.println("Check Connection");
-    isRunning = startRunning();
-    if(isRunning){
-        //get sensor from arduino
-        
+void loop(){
+    if(checkUpdateOTA()){
+        manageOTA();
+    }
+    if(checkTimer()){
+        wakeup();
+        if(!isSleep){
+            sendData(reqDataCom());
+            makeSleep();
+        }
     }
 }

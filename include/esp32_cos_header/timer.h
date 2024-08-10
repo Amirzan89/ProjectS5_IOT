@@ -1,4 +1,7 @@
 #ifndef TIMER_H
 #define TIMER_H
-bool startRunning();
+void initTimer();
+bool checkUpdateOTA();
+bool checkTimer();
+const int EEPROM_LAST_TIME_ADDRESS = 0;
 #endif

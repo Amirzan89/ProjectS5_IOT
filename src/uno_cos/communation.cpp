@@ -9,3 +9,6 @@ void initCom(){
         }
     }
 }
+void updateOTA(){
+    //
+}

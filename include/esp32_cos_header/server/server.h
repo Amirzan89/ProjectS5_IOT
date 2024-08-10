@@ -1,21 +1,20 @@
 #ifndef SERVER_H
 #define SERVER_H
-#include <ArduinoJson.h>
-#include <HTTPClient.h>
-// #include "../esp32_cos_lib/lib.h"
+#include "../esp32_cos_lib/lib.h"
 #include "../config.h"
 #include "../globals.h"
 struct Response {
     String status;
     String message;
     int code;
+    DynamicJsonDocument data = DynamicJsonDocument(32);
 };
 class CosServer {
     public:
         Response getData(const char* path) {
             return _sendRequest("GET", path);
         }
-        Response postData(const char* path, const DynamicJsonDocument& data) {
+        Response postData(const char* path, const DynamicJsonDocument& data = DynamicJsonDocument(64)) {
             return _sendRequest("POST", path, data);
         }
         Response putData(const char* path, const DynamicJsonDocument& data) {
@@ -54,6 +53,7 @@ class CosServer {
             if (code == 200) {
                 res.status = "success";
                 res.message = jsonRes["message"].as<String>();
+                // res.data = jsonRes["data"];
             } else {
                 res.status = "error";
                 res.message = jsonRes["message"].as<String>();
@@ -62,4 +62,7 @@ class CosServer {
             return res;
         }
 };
+void sendData(DynamicJsonDocument data);
+Response sendCheckOTA(DynamicJsonDocument data);
+String handleOTA(String cond);
 #endif
