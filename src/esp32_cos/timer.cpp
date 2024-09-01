@@ -3,11 +3,7 @@
 #include "esp32_cos_header/timer.h"
 #include "esp32_cos_header/server/RTC.h"
 const long getDataDelay = 1 * 60 * 60; //each get data from sensor
-const long getDataTimeout = 5 * 60;
-bool dataState = false;
-unsigned long timerUpdate = 0;
 unsigned long lastTime = 0;
-unsigned long lastDate = 0;
 void initTimer(){
     EEPROM.begin(512);
     initRTC();
@@ -27,20 +23,5 @@ bool checkTimer(){
     }
 }
 bool checkUpdateOTA(){
-    // unsigned long curMil = millis();
-    if()
-    if (curMil - lastDate >= getDataDelay) {
-        lastDate = curMil;
-        // dataState = true;
-        return true;
-    }else{
-        return false;
-    }
-    return false;
-    // if (dataState == false && curMil - previousMillis >= getDataDelay) {
-//    if (dataState == true && curMil - previousMillis >= intervalOn) {
-//        previousMillis = curMil;
-//        dataState = false;
-//        return false;
-//    }
+    return checRTCforOTA();
 }

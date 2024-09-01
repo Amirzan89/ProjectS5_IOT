@@ -17,10 +17,6 @@ void initCom(){
         }
     }
 }
-void sendOTA(String dataOTA){
-    // Serial.println("update");
-    // Serial.print(dataOTA);
-}
 DynamicJsonDocument reqDataCom(){
     Serial.println('getData');
     if(Serial.available() > 0){
@@ -28,4 +24,8 @@ DynamicJsonDocument reqDataCom(){
         deserializeJson(jsonRes, Serial.readStringUntil('\n'));
         return jsonRes;
     }
+}
+void sendOTA(File dataOTA){
+    // Serial.println("update");
+    // Serial.print(dataOTA);
 }

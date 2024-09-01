@@ -15,6 +15,3 @@ bool initMainServer(){
     }
     return true;
 }
-void runServer(){
-    
-}

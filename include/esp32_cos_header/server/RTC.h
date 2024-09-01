@@ -8,4 +8,5 @@ struct dateTime{
 extern dateTime curTime;
 void initRTC();
 void updateRTC();
+bool checRTCforOTA();
 #endif

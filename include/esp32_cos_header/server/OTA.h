@@ -7,5 +7,5 @@
 const String esp32Version = "1.0.0";
 String arduinoVersion = "1.0.0";
 void manageOTA();
-void updateOTA(String data);
+void updateOTA(File data);
 #endif

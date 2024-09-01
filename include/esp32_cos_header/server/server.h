@@ -8,30 +8,45 @@ struct Response {
     String message;
     int code;
     DynamicJsonDocument data = DynamicJsonDocument(32);
+    File file;
 };
 class CosServer {
     public:
-        Response getData(const char* path) {
-            return _sendRequest("GET", path);
+        Response getData(const DynamicJsonDocument reqData) {
+            DynamicJsonDocument reqConfig = reqData;
+            reqConfig["method"] = "GET";
+            return _sendRequest(reqConfig);
         }
-        Response postData(const char* path, const DynamicJsonDocument& data = DynamicJsonDocument(64)) {
-            return _sendRequest("POST", path, data);
+        Response postData(const DynamicJsonDocument reqData, const DynamicJsonDocument& data = DynamicJsonDocument(64)) {
+            DynamicJsonDocument reqConfig = reqData;
+            reqConfig["method"] = "POST";
+            return _sendRequest(reqConfig, data);
         }
-        Response putData(const char* path, const DynamicJsonDocument& data) {
-            return _sendRequest("PUT", path, data);
+        Response putData(const DynamicJsonDocument reqData, const DynamicJsonDocument& data) {
+            DynamicJsonDocument reqConfig = reqData;
+            reqConfig["method"] = "PUT";
+            return _sendRequest(reqConfig, data);
         }
-        Response deleteData(const char* path, const DynamicJsonDocument& data) {
-            return _sendRequest("DELETE", path, data);
+        Response deleteData(const DynamicJsonDocument reqData, const DynamicJsonDocument& data) {
+            DynamicJsonDocument reqConfig = reqData;
+            reqConfig["method"] = "DELETE";
+            return _sendRequest(reqConfig, data);
+        }
+        Response download(const DynamicJsonDocument reqData, const DynamicJsonDocument& data){
+            DynamicJsonDocument reqConfig = reqData;
+            reqConfig["method"] = "DELETE";
+            return _sendRequest(reqConfig, data, "file");
         }
 
     private:
         HTTPClient _http;
-        Response _sendRequest(const char* method, const char* path, const DynamicJsonDocument &data = DynamicJsonDocument(64)) {
-            String fullPath = String(CONFIG_baseURL) + path;
+        Response _sendRequest(DynamicJsonDocument Req, const DynamicJsonDocument &data = DynamicJsonDocument(64), const char* opt = "normal") {
+            String fullPath = String(CONFIG_baseURL) + Req["path"].as<String>();
             _http.begin(fullPath);
             int code = 0;
-            if (method == "GET") {
-                code = _http.sendRequest(method);
+            const char* reqMethod = Req["method"].as<String>().c_str();
+            if (reqMethod == "GET") {
+                code = _http.sendRequest(reqMethod);
             } else {
                 DynamicJsonDocument requestData = data;
                 _http.addHeader("Content-Type", "application/json");
@@ -39,7 +54,7 @@ class CosServer {
                 requestData["token"] = token;
                 String request;
                 serializeJson(requestData, request);
-                code = _http.sendRequest(method, request);
+                code = _http.sendRequest(reqMethod, request);
             }
             Response res;
             if (code <= 0) {
@@ -51,9 +66,14 @@ class CosServer {
             String resStr = _http.getString();
             deserializeJson(jsonRes, resStr);
             if (code == 200) {
-                res.status = "success";
-                res.message = jsonRes["message"].as<String>();
-                // res.data = jsonRes["data"];
+                if(opt == 'file'){
+                File file = SPIFFS.open(Req["path_file"], FILE_WRITE);
+                if(_http.getStream)
+                }else{
+                    res.status = "success";
+                    res.message = jsonRes["message"].as<String>();
+                    // res.data = jsonRes["data"];
+                }
             } else {
                 res.status = "error";
                 res.message = jsonRes["message"].as<String>();
@@ -64,5 +84,5 @@ class CosServer {
 };
 void sendData(DynamicJsonDocument data);
 Response sendCheckOTA(DynamicJsonDocument data);
-String handleOTA(String cond);
+File handleOTA(DynamicJsonDocument data);
 #endif

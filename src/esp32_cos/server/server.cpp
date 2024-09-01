@@ -17,8 +17,8 @@ Response sendCheckOTA(DynamicJsonDocument data){
     }
     return res;
 }
-String handleOTA(String cond){
-    Response res = cosServer.postData("/api/firmware/download");
+File handleOTA(DynamicJsonDocument data){
+    Response res = cosServer.postData("/api/firmware/download", data);
     if(res.status == "error"){
         // lcd.println("Error");
     }
